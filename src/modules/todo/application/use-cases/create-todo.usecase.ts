@@ -4,16 +4,16 @@ import { Inject } from '@nestjs/common';
 import { TODO_REPOSITORY } from '../../infrastructure/persistence/todo.repository.impl';
 
 interface CreateTodoInput {
-    title: string;
-    date: Date;
-    dependencyIds?: string[];
+  title: string;
+  date: Date;
+  dependencyIds?: string[];
 }
 
 export class CreateTodoUseCase {
   constructor(
     @Inject(TODO_REPOSITORY)
-    private readonly todoRepository: todoRepository.TodoRepository
-) {}
+    private readonly todoRepository: todoRepository.TodoRepository,
+  ) {}
 
   async execute(input: CreateTodoInput): Promise<TodoItem> {
     const { title, date, dependencyIds = [] } = input;

@@ -10,8 +10,8 @@ interface ListTodosInput {
 export class ListTodosUseCase {
   constructor(
     @Inject(TODO_REPOSITORY)
-    private readonly repo: todoRepository.TodoRepository
-) {}
+    private readonly repo: todoRepository.TodoRepository,
+  ) {}
 
   async execute({ page, limit }: ListTodosInput) {
     return this.repo.findAll({ page, limit });

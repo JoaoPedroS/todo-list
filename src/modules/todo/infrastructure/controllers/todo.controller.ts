@@ -7,7 +7,7 @@ import { ListTodosUseCase } from '../../application/use-cases/list-todos.usecase
 export class TodoController {
   constructor(
     private readonly createTodoUseCase: CreateTodoUseCase,
-    private readonly listTodosUseCase: ListTodosUseCase
+    private readonly listTodosUseCase: ListTodosUseCase,
   ) {}
 
   @Post()
@@ -26,13 +26,10 @@ export class TodoController {
   }
 
   @Get()
-  async list(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-  ) {
+  async list(@Query('page') page = 1, @Query('limit') limit = 10) {
     return this.listTodosUseCase.execute({
-        page: Number(page),
-        limit: Number(limit),
+      page: Number(page),
+      limit: Number(limit),
     });
   }
 }

@@ -34,7 +34,7 @@ describe('TodoItem – regra de dependência de datas ', () => {
 
   it('Deve listar todos paginados', async () => {
     const repo = new InMemoryTodoRepository();
-  
+
     for (let i = 1; i <= 15; i++) {
       await repo.save(
         TodoItem.create(
@@ -43,9 +43,9 @@ describe('TodoItem – regra de dependência de datas ', () => {
         ),
       );
     }
-  
+
     const result = await repo.findAll({ page: 2, limit: 5 });
-  
+
     expect(result.data).toHaveLength(5);
     expect(result.total).toBe(15);
     expect(result.page).toBe(2);

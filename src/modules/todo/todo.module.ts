@@ -5,7 +5,10 @@ import { TodoController } from './infrastructure/controllers/todo.controller';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TodoModel } from './infrastructure/models/todo.model';
 import { TodoDependencyModel } from './infrastructure/models/todo-dependency.model';
-import { TODO_REPOSITORY, TypeOrmTodoRepository } from './infrastructure/persistence/todo.repository.impl';
+import {
+  TODO_REPOSITORY,
+  TypeOrmTodoRepository,
+} from './infrastructure/persistence/todo.repository.impl';
 import { Repository } from 'typeorm';
 
 @Module({
@@ -27,6 +30,6 @@ import { Repository } from 'typeorm';
         getRepositoryToken(TodoDependencyModel),
       ],
     },
-  ]
+  ],
 })
 export class TodoModule {}
