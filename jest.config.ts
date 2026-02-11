@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 export default {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',

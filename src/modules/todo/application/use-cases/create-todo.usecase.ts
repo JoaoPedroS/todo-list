@@ -1,6 +1,6 @@
 import * as todoRepository from '../../domain/repositories/todo.repository';
 import { TodoItem } from '../../domain/entities/todo-item.entity';
-import { Inject } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { TODO_REPOSITORY } from '../../infrastructure/database/persistence/todo.repository.impl';
 
 interface CreateTodoInput {
@@ -24,7 +24,7 @@ export class CreateTodoUseCase {
       const dependency = await this.todoRepository.findById(dependencyId);
 
       if (!dependency) {
-        throw new Error(`Dependency ${dependencyId} not found`);
+        throw new BadRequestException(`Dependency ${dependencyId} not found`);
       }
 
       dependencies.push(dependency);

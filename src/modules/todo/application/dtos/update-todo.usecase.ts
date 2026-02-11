@@ -16,7 +16,7 @@ export class UpdateTodoDto {
   @IsOptional()
   date: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'o id do item é obrigatório' })
   @IsUUID('4', { each: true })
   @ArrayUnique()
   id: string;

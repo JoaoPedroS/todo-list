@@ -9,10 +9,11 @@ import {
 
 export class CreateTodoDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'o titulo do item é obrigatório' })
   title: string;
 
   @IsDateString()
+  @IsNotEmpty({ message: 'a data do item é obrigatória' })
   date: string;
 
   @IsOptional()
