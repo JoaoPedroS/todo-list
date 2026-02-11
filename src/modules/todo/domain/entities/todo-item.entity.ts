@@ -39,8 +39,42 @@ export class TodoItem {
     return this._title;
   }
 
+  set date(date: Date) {
+    this._date = date;
+  }
+
+  set title(title: string) {
+    this._title = title;
+  }
+
   addDependent(todo: TodoItem): void {
+    if (todo.id === this._id) {
+      throw new Error('Todo cannot depend on itself');
+    }
+
+    if (this.hasCircularDependency(todo)) {
+      throw new Error('Circular dependency detected');
+    }
+
     this._dependents.push(todo);
+  }
+
+  private hasCircularDependency(todo: TodoItem): boolean {
+    return todo.dependsOn(this);
+  }
+
+  private dependsOn(target: TodoItem): boolean {
+    if (this._dependents.some((dep) => dep.id === target.id)) {
+      return true;
+    }
+
+    for (const dep of this._dependents) {
+      if (dep.dependsOn(target)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   get dependents(): TodoItem[] {

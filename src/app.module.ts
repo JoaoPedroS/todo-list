@@ -1,20 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TodoModule } from './modules/todo/todo.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from './modules/todo/infrastructure/database/typeorm.config';
 
 @Module({
-  imports: [
-    TodoModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'todo-list',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
-  ],
+  imports: [TodoModule, TypeOrmModule.forRoot(typeOrmConfig())],
 })
 export class AppModule {}
