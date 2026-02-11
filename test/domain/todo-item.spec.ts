@@ -1,7 +1,46 @@
 import { TodoItem } from '../../src/modules/todo/domain/entities/todo-item.entity';
 import { InMemoryTodoRepository } from '../repositories/in-memory-todo.repository';
 
-describe('TodoItem – regra de dependência de datas ', () => {
+describe('TodoItem – regras de dependência ', () => {
+  it('cria um item com título e data', () => {
+    const item = TodoItem.create('Task A', new Date('2025-10-20'));
+
+    expect(item.title).toBe('Task A');
+    expect(item.date.toISOString()).toBe(new Date('2025-10-20').toISOString());
+  });
+
+  it('cria item sem dependências por padrão', () => {
+    const item = TodoItem.create('Task A', new Date('2025-10-20'));
+
+    expect(item.dependents).toHaveLength(0);
+  });
+
+  it('não permite depender de si mesmo', () => {
+    const a = TodoItem.create('A', new Date('2025-10-20'));
+
+    expect(() => a.addDependent(a)).toThrow();
+  });
+
+  it('impede dependência circular direta', () => {
+    const a = TodoItem.create('A', new Date('2025-10-20'));
+    const b = TodoItem.create('B', new Date('2025-10-21'));
+
+    a.addDependent(b);
+
+    expect(() => b.addDependent(a)).toThrow();
+  });
+
+  it('impede dependência circular indireta', () => {
+    const a = TodoItem.create('A', new Date('2025-10-20'));
+    const b = TodoItem.create('B', new Date('2025-10-21'));
+    const c = TodoItem.create('C', new Date('2025-10-22'));
+
+    b.addDependent(a);
+    c.addDependent(b);
+
+    expect(() => a.addDependent(c)).toThrow();
+  });
+
   it('Deve atualizar a data dos dependentes recursivamente', () => {
     const taskA = TodoItem.create('Task A', new Date('2025-10-20'));
 
@@ -31,7 +70,9 @@ describe('TodoItem – regra de dependência de datas ', () => {
 
     expect(c.date.toISOString()).toBe(new Date('2025-10-27').toISOString());
   });
+});
 
+describe('Todo - teste de listagem', () => {
   it('Deve listar todos paginados', async () => {
     const repo = new InMemoryTodoRepository();
 
