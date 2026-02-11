@@ -1,0 +1,195 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: todo-list
+meta:
+  id: wrk_662f50b2cefc46309a86509b84b3f295
+  created: 1770666832308
+  modified: 1770666832308
+  description: ""
+collection:
+  - name: TODO
+    meta:
+      id: fld_023adb06df184ea797fa81d916fb7665
+      created: 1770666840745
+      modified: 1770666866876
+      sortKey: -1770666840745
+      description: ""
+    children:
+      - name: POST
+        meta:
+          id: fld_7d1dbee8013747e6a7960475d3a311f8
+          created: 1770666847941
+          modified: 1770666853862
+          sortKey: -1770666847941
+          description: ""
+        children:
+          - url: "{{ _.baseUrl }}/todos"
+            name: Create todos
+            meta:
+              id: req_d3c447a2fd87496da1f2c777ccb17581
+              created: 1770666878295
+              modified: 1770831753600
+              isPrivate: false
+              description: ""
+              sortKey: -1770666878295
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                  "title": "Implementar autenticação nova 2",
+                  "date": "2025-10-20",
+                	"dependencyIds": ["abuble"]
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/11.0.2
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: GET
+        meta:
+          id: fld_1565bd3aafe240e896a8ff1ef7a25325
+          created: 1770666859357
+          modified: 1770666859357
+          sortKey: -1770666859357
+          description: ""
+        children:
+          - url: "{{ _.baseUrl }}/todos"
+            name: List All Todos
+            meta:
+              id: req_6793f095ee8940bc9ab8edbd781e33c6
+              created: 1770666943712
+              modified: 1770820867088
+              isPrivate: false
+              description: ""
+              sortKey: -1770666943712
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/11.0.2
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.baseUrl }}/todos/835a37fb-811c-4dfd-ae9b-4df4449a6aed"
+            name: Find One Todo
+            meta:
+              id: req_c0f5a2f3f4724540abbc53d98534e1e1
+              created: 1770774786358
+              modified: 1770831697110
+              isPrivate: false
+              description: ""
+              sortKey: -1770774786358
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: PUT
+        meta:
+          id: fld_3882d1789a724e4e928f5d0f8a8324ab
+          created: 1770666864818
+          modified: 1770666864818
+          sortKey: -1770666864818
+          description: ""
+        children:
+          - url: "{{ _.baseUrl }}/todos"
+            name: UpdateTodo
+            meta:
+              id: req_5f32fc8c728c47a69d137b80851f79d2
+              created: 1770817507620
+              modified: 1770831713611
+              isPrivate: false
+              description: ""
+              sortKey: -1770817507620
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"id": "835a37fb-811c-4dfd-ae9b-4df4449a6aed",
+                	"title": "Implementar autenticação atualizada",
+                	"date": "2025-10-21"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: DELETE
+        meta:
+          id: fld_0b8284d7ff014409a39a7924744b78b2
+          created: 1770666870781
+          modified: 1770666870781
+          sortKey: -1770666870781
+          description: ""
+        children:
+          - url: "{{ _.baseUrl }}/todos/6cc946d0-1ebf-4e58-9c69-99f056de7aa1"
+            name: Delete Todo
+            meta:
+              id: req_9e01511e2a934d9e99864d321c89bd1d
+              created: 1770816833197
+              modified: 1770829119395
+              isPrivate: false
+              description: ""
+              sortKey: -1770829112527
+            method: DELETE
+            headers:
+              - name: User-Agent
+                value: insomnia/12.3.1
+                description: ""
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_46d9aa31d2727bc80692a43b0eaacd62cf463d28
+    created: 1770666832314
+    modified: 1770666832314
+environments:
+  name: Base Environment
+  meta:
+    id: env_46d9aa31d2727bc80692a43b0eaacd62cf463d28
+    created: 1770666832312
+    modified: 1770666904309
+    isPrivate: false
+  data:
+    baseUrl: http://localhost:3000
