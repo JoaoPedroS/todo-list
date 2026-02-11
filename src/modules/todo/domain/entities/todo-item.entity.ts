@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-
+import { addDays, differenceInCalendarDays } from 'date-fns';
 export class TodoItem {
   private readonly _id: string;
   private _title: string;
@@ -82,22 +82,14 @@ export class TodoItem {
   }
 
   updateDate(newDate: Date): void {
-    const diffInDays = this.diffInDays(this._date, newDate);
+    const diffInDays = differenceInCalendarDays(newDate, this._date);
     this._date = newDate;
 
     this._dependents.forEach((dep) => dep.shiftDate(diffInDays));
   }
 
   private shiftDate(days: number): void {
-    const newDate = new Date(this._date);
-    newDate.setDate(newDate.getDate() + days);
-    this._date = newDate;
-
+    this._date = addDays(this._date, days);
     this._dependents.forEach((dep) => dep.shiftDate(days));
-  }
-
-  private diffInDays(oldDate: Date, newDate: Date): number {
-    const diffTime = newDate.getTime() - oldDate.getTime();
-    return Math.round(diffTime / (1000 * 60 * 60 * 24));
   }
 }

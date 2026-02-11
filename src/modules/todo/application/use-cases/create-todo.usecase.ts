@@ -1,7 +1,7 @@
 import * as todoRepository from '../../domain/repositories/todo.repository';
 import { TodoItem } from '../../domain/entities/todo-item.entity';
 import { Inject } from '@nestjs/common';
-import { TODO_REPOSITORY } from '../../infrastructure/persistence/todo.repository.impl';
+import { TODO_REPOSITORY } from '../../infrastructure/database/persistence/todo.repository.impl';
 
 interface CreateTodoInput {
   title: string;
@@ -29,15 +29,14 @@ export class CreateTodoUseCase {
 
       dependencies.push(dependency);
     }
-
     const todo = TodoItem.create(title, date);
+
+    await this.todoRepository.save(todo);
 
     for (const dependency of dependencies) {
       dependency.addDependent(todo);
       await this.todoRepository.save(dependency);
     }
-
-    await this.todoRepository.save(todo);
 
     return todo;
   }

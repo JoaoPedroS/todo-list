@@ -1,4 +1,6 @@
-import { Repository } from 'typeorm';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import {
   PaginatedResult,
   PaginationParams,
@@ -14,10 +16,15 @@ export class TypeOrmTodoRepository implements TodoRepository {
   constructor(
     private readonly todoRepo: Repository<TodoModel>,
     private readonly depRepo: Repository<TodoDependencyModel>,
+    private readonly dataSource: DataSource,
   ) {}
 
-  delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(id: string): Promise<void> {
+    await this.depRepo.delete({ parentId: id });
+
+    await this.depRepo.delete({ dependentId: id });
+
+    await this.todoRepo.delete({ id });
   }
 
   async findAll({
@@ -50,12 +57,19 @@ export class TypeOrmTodoRepository implements TodoRepository {
 
         if (depTodo) {
           dependents.push(
-            TodoItem.create(depTodo.title, depTodo.date, [], depTodo.id),
+            TodoItem.create(
+              depTodo.title,
+              new Date(depTodo.date),
+              [],
+              depTodo.id,
+            ),
           );
         }
       }
 
-      items.push(TodoItem.create(todo.title, todo.date, dependents, todo.id));
+      items.push(
+        TodoItem.create(todo.title, new Date(todo.date), dependents, todo.id),
+      );
     }
 
     return {
@@ -70,8 +84,12 @@ export class TypeOrmTodoRepository implements TodoRepository {
     const todo = await this.todoRepo.findOne({ where: { id } });
     if (!todo) return null;
 
+    return this.buildTodoTree(todo);
+  }
+
+  private async buildTodoTree(todoModel: TodoModel): Promise<TodoItem> {
     const deps = await this.depRepo.find({
-      where: { parentId: id },
+      where: { parentId: todoModel.id },
     });
 
     const dependents: TodoItem[] = [];
@@ -82,27 +100,46 @@ export class TypeOrmTodoRepository implements TodoRepository {
       });
 
       if (depTodo) {
-        dependents.push(
-          TodoItem.create(depTodo.title, depTodo.date, [], depTodo.id),
-        );
+        const childTree = await this.buildTodoTree(depTodo);
+        dependents.push(childTree);
       }
     }
 
-    return TodoItem.create(todo.title, todo.date, dependents, todo.id);
+    return TodoItem.create(
+      todoModel.title,
+      new Date(todoModel.date),
+      dependents,
+      todoModel.id,
+    );
   }
 
   async save(todo: TodoItem): Promise<void> {
-    await this.todoRepo.save({
+    await this.dataSource.transaction(async (manager) => {
+      await this.persistTodoTree(todo, manager);
+    });
+  }
+
+  private async persistTodoTree(
+    todo: TodoItem,
+    manager: EntityManager,
+  ): Promise<void> {
+    await manager.save(TodoModel, {
       id: todo.id,
       title: todo.title,
-      date: todo.date,
+      date: todo.date.toISOString().split('T')[0],
+    });
+
+    await manager.delete(TodoDependencyModel, {
+      parentId: todo.id,
     });
 
     for (const dep of todo.dependents) {
-      await this.depRepo.save({
+      await manager.save(TodoDependencyModel, {
         parentId: todo.id,
         dependentId: dep.id,
       });
+
+      await this.persistTodoTree(dep, manager);
     }
   }
 }

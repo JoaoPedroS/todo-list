@@ -9,5 +9,5 @@ export class TodoModel {
   title: string;
 
   @Column({ type: 'date' })
-  date: Date;
+  date: string;
 }
